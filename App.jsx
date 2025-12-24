@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native'
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { ThemeProvider, useTheme } from './src/hooks/ThemeContext'
@@ -26,6 +26,7 @@ import Export from './src/screens/Export';
 import AccountsScreen from './src/screens/AccountsScreen';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import BackupScreen from './src/screens/BackupScreen';
+import { checkForUpdate, UpdateFlow } from 'react-native-in-app-updates';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,6 +84,15 @@ const App = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState('Cash'); // Default to Cash initially
 
+  async function checkUpdate() {
+    try {
+      const abc = await checkForUpdate(UpdateFlow.IMMEDIATE); 
+      console.log(abc)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -99,6 +109,7 @@ const App = () => {
       }
     };
 
+    checkUpdate();
     initializeApp();
   }, [isFirstLaunch]);
 
