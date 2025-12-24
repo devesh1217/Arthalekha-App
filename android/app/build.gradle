@@ -85,8 +85,8 @@ android {
         applicationId "com.myexpensemanager"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "0.2.4"
+        versionCode 9
+        versionName "0.2.5"
         resValue "string", "server_client_id", "246513769064-9th4qrtipqfcmf1962ot6mg03b1hfou7.apps.googleusercontent.com"
         vectorDrawables.useSupportLibrary = true
     }
