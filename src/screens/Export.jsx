@@ -692,32 +692,32 @@ const Export = ({ navigation }) => {
                         <View>
                             <View style={styles.tableWrapper}>
                                 <View style={styles.headerColumn}>
-                                    <Text style={styles.headerCell}>Date</Text>
+                                    <Text style={[styles.headerCell, { color: theme.color }]}>Date</Text>
                                 </View>
                                 <View style={styles.headerColumn}>
-                                    <Text style={styles.headerCell}>Title</Text>
+                                    <Text style={[styles.headerCell, { color: theme.color }]}>Title</Text>
                                 </View>
                                 <View style={styles.headerColumn}>
-                                    <Text style={styles.headerCell}>Amount</Text>
+                                    <Text style={[styles.headerCell, { color: theme.color }]}>Amount</Text>
                                 </View>
                                 <View style={styles.headerColumn}>
-                                    <Text style={styles.headerCell}>Type</Text>
+                                    <Text style={[styles.headerCell, { color: theme.color }]}>Type</Text>
                                 </View>
                             </View>
                             <ScrollView style={{ flex: 1 }}>
                                 {previewData.map((item, index) => (
                                     <View key={index} style={styles.tableWrapper}>
                                         <View style={styles.tableColumn}>
-                                            <Text style={styles.tableCell}>{item.date}</Text>
+                                            <Text style={[styles.tableCell, { color: theme.color }]}>{item.date}</Text>
                                         </View>
                                         <View style={styles.tableColumn}>
-                                            <Text style={styles.tableCell}>{item.title}</Text>
+                                            <Text style={[styles.tableCell, { color: theme.color }]}>{item.title}</Text>
                                         </View>
                                         <View style={styles.tableColumn}>
-                                            <Text style={styles.tableCell}>₹{item.amount}</Text>
+                                            <Text style={[styles.tableCell, { color: theme.color }]}>₹{item.amount}</Text>
                                         </View>
                                         <View style={styles.tableColumn}>
-                                            <Text style={styles.tableCell}>{item.type}</Text>
+                                            <Text style={[styles.tableCell, { color: theme.color }]}>{item.type}</Text>
                                         </View>
                                     </View>
                                 ))}

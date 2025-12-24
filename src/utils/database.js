@@ -546,14 +546,22 @@ export const fetchTransactionsByFilters = (query, filters) => {
         params.push(filters.type);
       }
 
-      // Date range filter
+      // Date range filter (use only date part, local time)
+      const toLocalDateString = (d) => {
+        if (!d) return '';
+        // Get local date in YYYY-MM-DD
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
       if (filters.startDate) {
-        conditions.push('date >= ?');
-        params.push(filters.startDate.toISOString().split('T')[0]);
+        conditions.push('date(date) >= date(?)');
+        params.push(toLocalDateString(filters.startDate));
       }
       if (filters.endDate) {
-        conditions.push('date <= ?');
-        params.push(filters.endDate.toISOString().split('T')[0]);
+        conditions.push('date(date) <= date(?)');
+        params.push(toLocalDateString(filters.endDate));
       }
 
       // Account filter - updated to handle multiple accounts
