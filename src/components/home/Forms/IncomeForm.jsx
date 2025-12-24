@@ -196,7 +196,7 @@ const IncomeForm = ({ onClose, navigation }) => {
     };
 
     return (
-        <View style={styles.form}>
+        <Pressable style={styles.form}>
             <View style={styles.inputGroup}>
                 <Text style={styles.label}>Title</Text>
                 <View style={styles.inputWithIcon}>
@@ -284,7 +284,7 @@ const IncomeForm = ({ onClose, navigation }) => {
                     <Text style={styles.text}>Save Income</Text>
                 </Pressable>
             </View>
-        </View>
+        </Pressable>
     )
 }
 

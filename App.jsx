@@ -1,4 +1,5 @@
-import { View, StyleSheet, SafeAreaView } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { ThemeProvider, useTheme } from './src/hooks/ThemeContext'
@@ -98,7 +99,7 @@ const App = () => {
   const checkFirstLaunch = async () => {
     try {
       const setupComplete = await AsyncStorage.getItem('setupComplete');
-      if(setupComplete !== 'true'){
+      if (setupComplete !== 'true') {
         createTables();
       }
       setIsFirstLaunch(setupComplete !== 'true');
@@ -112,29 +113,31 @@ const App = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <ThemeProvider>
-          <NavigationContainer style={{ flex: 1 }}>
-            <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={isFirstLaunch ? 'Setup' : 'MainStack'}>
-                <Stack.Screen 
-                  name="Setup" 
-                  component={SetupGuide} 
-                  initialParams={{ defaultAccount }} 
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider store={store}>
+          <ThemeProvider>
+            <NavigationContainer style={{ flex: 1 }}>
+              <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={isFirstLaunch ? 'Setup' : 'MainStack'}>
+                <Stack.Screen
+                  name="Setup"
+                  component={SetupGuide}
+                  initialParams={{ defaultAccount }}
                 />
-                <Stack.Screen 
-                  name="MainStack" 
-                  component={MainStack} 
+                <Stack.Screen
+                  name="MainStack"
+                  component={MainStack}
                   initialParams={{ defaultAccount }}
                 />
                 <Stack.Screen name="Setting" component={Setting} />
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="Export" component={Export} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ThemeProvider>
-      </Provider>
-    </GestureHandlerRootView>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ThemeProvider>
+        </Provider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 };
 

@@ -196,7 +196,7 @@ const ExpenseForm = ({ onClose, navigation }) => {
     };
 
     return (
-        <View style={styles.form}>
+        <Pressable style={styles.form}>
             <View style={styles.inputGroup}>
                 <Text style={styles.label}>Title</Text>
                 <View style={styles.inputWithIcon}>
@@ -307,7 +307,7 @@ const ExpenseForm = ({ onClose, navigation }) => {
                     <Text style={styles.text}>Save Expense</Text>
                 </Pressable>
             </View>
-        </View>
+        </Pressable>
     );
 }
 
