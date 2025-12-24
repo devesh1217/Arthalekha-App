@@ -3,6 +3,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { ThemeProvider, useTheme } from './src/hooks/ThemeContext'
+import { initBackgroundBackup } from './src/utils/backgroundBackup';
 import HomeContainer from './src/screens/Home';
 import NavBar from './src/components/navbar/NavBar';
 import store from './src/redux/store';
@@ -22,6 +23,9 @@ import SetupGuide from './src/screens/SetupGuide';
 import { createStackNavigator } from '@react-navigation/stack';
 import About from './src/screens/About';
 import Export from './src/screens/Export';
+import AccountsScreen from './src/screens/AccountsScreen';
+import CategoriesScreen from './src/screens/CategoriesScreen';
+import BackupScreen from './src/screens/BackupScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,6 +92,8 @@ const App = () => {
           const defaultAcc = accounts.find(acc => acc.isDefault === 1);
           setDefaultAccount(defaultAcc?.name || 'Cash');
         }
+        // Start background backup
+        await initBackgroundBackup();
       } catch (error) {
         console.error('Error initializing app:', error);
       }
@@ -130,6 +136,9 @@ const App = () => {
                   initialParams={{ defaultAccount }}
                 />
                 <Stack.Screen name="Setting" component={Setting} />
+                <Stack.Screen name="AccountsScreen" component={AccountsScreen} />
+                <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+                <Stack.Screen name="BackupScreen" component={BackupScreen} />
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="Export" component={Export} />
               </Stack.Navigator>

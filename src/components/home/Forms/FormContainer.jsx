@@ -21,7 +21,6 @@ const FormContainer = ({ onClose }) => {
 
         onMoveShouldSetPanResponder: (_, gestureState) => {
             const { dx, dy } = gestureState;
-            console.log(gestureState,Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10)
             // Check if movement is horizontal AND significant (greater than 10 pixels)
             // The > 10 threshold prevents accidental swipes when trying to tap
             return Math.abs(dx) >= Math.abs(dy) && Math.abs(dx) > 10;
@@ -29,12 +28,9 @@ const FormContainer = ({ onClose }) => {
 
         onPanResponderRelease: (_, gestureState) => {
             // Your existing logic remains the same
-            console.log(gestureState)
             if (gestureState.dx > 50 && activeForm === 'expense') {
-                console.log('in')
                 toggleForm('income');
             } else if (gestureState.dx < -50 && activeForm === 'income') {
-                console.log('ex')
                 toggleForm('expense');
             }
         },
