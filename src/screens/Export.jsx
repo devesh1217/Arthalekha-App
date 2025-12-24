@@ -11,6 +11,7 @@ import Pdf from 'react-native-pdf';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import { CheckBox } from 'react-native-elements';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Export = ({ navigation }) => {
     const { theme } = useTheme();
@@ -433,7 +434,7 @@ const Export = ({ navigation }) => {
     });
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icon name="arrow-back" size={24} color={theme.color} />
@@ -747,7 +748,7 @@ const Export = ({ navigation }) => {
                     }}
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 

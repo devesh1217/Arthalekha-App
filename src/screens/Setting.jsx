@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { getAccounts, addCustomAccount, getCategories, addCustomCategory, getAccountBalance, updateDefaultAccount, getAllAccountBalances, updateAccount, addAccount, deleteAccount, updateCategory, addCategory, deleteCategory } from '../utils/database';
 import { accountIcons } from '../constants/iconOptions';
 import { createBackup } from '../utils/backupUtils';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Setting = ({ navigation }) => {
     const { theme, toggleTheme } = useTheme();
@@ -434,7 +435,7 @@ const Setting = ({ navigation }) => {
     });
 
     return (
-        <>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.backgroundColor }}>
             <ScrollView style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity
@@ -754,7 +755,7 @@ const Setting = ({ navigation }) => {
                     </View>
                 </View>
             )}
-        </>
+        </SafeAreaView>
     );
 };
 
