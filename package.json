@@ -11,6 +11,7 @@
     "version": "react-native-version"
   },
   "dependencies": {
+    "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/datetimepicker": "^8.3.0",
     "@react-native-documents/picker": "^10.1.7",

@@ -26,7 +26,9 @@ import Export from './src/screens/Export';
 import AccountsScreen from './src/screens/AccountsScreen';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import BackupScreen from './src/screens/BackupScreen';
+import NotificationScreen from './src/screens/NotificationScreen';
 import { checkForUpdate, UpdateFlow } from 'react-native-in-app-updates';
+import { setupNotifications } from './src/utils/notifications';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -86,8 +88,7 @@ const App = () => {
 
   async function checkUpdate() {
     try {
-      const abc = await checkForUpdate(UpdateFlow.IMMEDIATE); 
-      console.log(abc)
+      await checkForUpdate(UpdateFlow.IMMEDIATE); 
     } catch (e) {
       console.error(e)
     }
@@ -111,6 +112,7 @@ const App = () => {
 
     checkUpdate();
     initializeApp();
+    setupNotifications();
   }, [isFirstLaunch]);
 
   const checkFirstLaunch = async () => {
@@ -150,6 +152,7 @@ const App = () => {
                 <Stack.Screen name="AccountsScreen" component={AccountsScreen} />
                 <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
                 <Stack.Screen name="BackupScreen" component={BackupScreen} />
+                <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="Export" component={Export} />
               </Stack.Navigator>

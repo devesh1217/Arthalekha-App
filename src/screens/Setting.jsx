@@ -47,6 +47,13 @@ const Setting = ({ navigation }) => {
                 </View>
                 <Icon name="chevron-forward" size={24} color={theme.color} />
             </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('NotificationScreen')}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Icon name="notifications-outline" size={24} color={theme.color} style={{ marginRight: 12 }} />
+                    <Text style={styles.navText}>Notifications</Text>
+                </View>
+                <Icon name="chevron-forward" size={24} color={theme.color} />
+            </TouchableOpacity>
             <View style={styles.themeToggle}>
                 <Text style={styles.navText}>Dark Mode</Text>
                 <Switch value={theme.backgroundColor === '#121212'} onValueChange={toggleTheme} />
