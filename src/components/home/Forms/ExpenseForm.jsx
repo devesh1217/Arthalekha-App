@@ -191,7 +191,6 @@ const ExpenseForm = ({ onClose, navigation }) => {
             navigation.navigate('Home');
         }
 
-        Alert.alert('Expense saved!');
         onClose?.();
     };
 

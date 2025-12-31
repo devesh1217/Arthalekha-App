@@ -6,12 +6,11 @@ import CustomPicker from '../components/common/CustomPicker';
 import CustomMultiSelect from '../components/common/CustomMultiSelect';
 import { getAccounts, fetchTransactionsByFilters, getCategories } from '../utils/database';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { exportAsCSV, generatePDFPreview, savePDFToDownloads, generateExcelPreview, saveExcelToDownloads } from '../utils/exportUtils';
+import { generatePDFPreview, savePDFToDownloads, generateExcelPreview, saveExcelToDownloads } from '../utils/exportUtils';
 import Pdf from 'react-native-pdf';
 import RNFS from 'react-native-fs';
-import Share from 'react-native-share';
-import { CheckBox } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator } from 'react-native';
 
 const Export = ({ navigation }) => {
     const { theme } = useTheme();
@@ -38,6 +37,20 @@ const Export = ({ navigation }) => {
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [showMonthPicker, setShowMonthPicker] = useState(false);
     const [showYearPicker, setShowYearPicker] = useState(false);
+    const [options, setOptions] = useState({});
+
+    // Loader overlay state
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('');
+    // Loader overlay helpers
+    const showLoader = (message) => {
+        setLoadingMessage(message);
+        setIsLoading(true);
+    };
+    const hideLoader = () => {
+        setIsLoading(false);
+        setLoadingMessage('');
+    };
 
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -127,6 +140,7 @@ const Export = ({ navigation }) => {
 
     const handleExport = async (format) => {
         try {
+            showLoader(format === 'pdf' ? 'Preparing PDF...' : 'Preparing Excel...');
             // Update to include selected accounts and categories in filters
             const filterParams = {
                 ...filters,
@@ -137,35 +151,56 @@ const Export = ({ navigation }) => {
             const transactions = await fetchTransactionsByFilters('', filterParams);
 
             if (transactions.length === 0) {
+                hideLoader();
                 Alert.alert('No Data', 'No transactions found for the selected filters.');
                 return;
             }
 
             setPreviewData(transactions);
 
+            const exportOptions = {
+                exportType: dateRangeType,
+                month: selectedMonth,
+                year: selectedYear,
+                monthName: months[selectedMonth],
+                startDate: filters.startDate ? filters.startDate.toLocaleDateString() : '',
+                endDate: filters.endDate ? filters.endDate.toLocaleDateString() : '',
+            };
+            
+            setOptions(exportOptions);
+
             if (format === 'pdf') {
-                const previewPath = await generatePDFPreview(transactions);
+                const previewPath = await generatePDFPreview(transactions, exportOptions);
                 setTempFilePath(previewPath);
                 setPdfPreview(previewPath);
                 setShowPdfPreview(true);
             } else {
-                const previewPath = await generateExcelPreview(transactions);
+                const previewPath = await generateExcelPreview(transactions, exportOptions);
                 setTempFilePath(previewPath);
                 setShowExcelPreview(true);
             }
+            hideLoader();
         } catch (error) {
+            hideLoader();
             console.error('Export error:', error);
             Alert.alert('Export Error', 'Failed to generate preview.');
         }
     };
+    // Loader overlay styles (copied from BackupScreen)
+    const loaderStyles = StyleSheet.create({
+        loadingOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.7)', justifyContent: 'center', alignItems: 'center', zIndex: 9999 },
+        loadingContainer: { backgroundColor: theme.cardBackground, padding: 20, borderRadius: 10, alignItems: 'center', minWidth: 200 },
+        loadingText: { color: theme.color, marginTop: 10, fontSize: 16, textAlign: 'center' },
+        loadingSpinner: { height: 50 },
+    });
 
     const handleSave = async (format) => {
         try {
             if (!tempFilePath) return;
 
             const savedPath = format === 'pdf' 
-                ? await savePDFToDownloads(tempFilePath)
-                : await saveExcelToDownloads(tempFilePath);
+                ? await savePDFToDownloads(tempFilePath, options)
+                : await saveExcelToDownloads(tempFilePath, options);
 
             Alert.alert('Success', 'File saved to Downloads/ArthaLekha');
             setTempFilePath(null);
@@ -186,7 +221,9 @@ const Export = ({ navigation }) => {
                 filename: `transactions_${Date.now()}.${format === 'pdf' ? 'pdf' : 'csv'}`
             });
         } catch (error) {
-            console.error('Share error:', error);
+            hideLoader();
+            console.error('Export error:', error);
+            Alert.alert('Export Error', 'Failed to generate preview.');
         }
     };
 
@@ -627,12 +664,6 @@ const Export = ({ navigation }) => {
                         <View style={styles.modalActions}>
                             <TouchableOpacity 
                                 style={styles.modalHeaderIcon}
-                                onPress={() => handleShare('pdf')}
-                            >
-                                <Icon name="share-outline" size={24} color={theme.color} />
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={styles.modalHeaderIcon}
                                 onPress={() => handleSave('pdf')}
                             >
                                 <Icon name="save-outline" size={24} color={theme.color} />
@@ -670,12 +701,6 @@ const Export = ({ navigation }) => {
                             <Text style={styles.modalTitle}>Excel Preview</Text>
                         </View>
                         <View style={styles.modalActions}>
-                            <TouchableOpacity 
-                                style={styles.modalHeaderIcon}
-                                onPress={() => handleShare('excel')}
-                            >
-                                <Icon name="share-outline" size={24} color={theme.color} />
-                            </TouchableOpacity>
                             <TouchableOpacity 
                                 style={styles.modalHeaderIcon}
                                 onPress={() => handleSave('excel')}
@@ -748,6 +773,15 @@ const Export = ({ navigation }) => {
                     }}
                 />
             )}
+        {/* Loader Overlay */}
+        {isLoading && (
+            <View style={loaderStyles.loadingOverlay} pointerEvents="auto">
+                <View style={loaderStyles.loadingContainer}>
+                    <ActivityIndicator size="large" color={theme.appThemeColor} style={loaderStyles.loadingSpinner} />
+                    <Text style={loaderStyles.loadingText}>{loadingMessage}</Text>
+                </View>
+            </View>
+        )}
         </SafeAreaView>
     );
 };
